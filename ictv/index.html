@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICTV - онлайн трансляція безкоштовно</title>
+    <style>
+        html, body {
+          padding: 0;
+          margin: 0;
+          width: 100vw;
+          height: 100vh;
+        }
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        video {
+            width: 100%;
+
+        }
+    </style>
+</head>
+<body>
+    <video id="video" controls></video>
+
+    <!-- HLS.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('video');
+            const hlsStreamURL = 'https://a5.pokaz.me/103/index.m3u8?k=1733116047p991i71i051i64S48880b10f7c2359809ce41be3559a941'; // Вкажіть тут посилання на ваш HLS-потік
+
+            // Перевірка підтримки HLS
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(hlsStreamURL);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Для браузерів із нативною підтримкою HLS (наприклад, Safari)
+                video.src = hlsStreamURL;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            } else {
+                alert('Ваш браузер не підтримує відтворення HLS.');
+            }
+        });
+    </script>
+</body>
+</html>
